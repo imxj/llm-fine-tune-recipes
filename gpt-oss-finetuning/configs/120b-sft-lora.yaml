@@ -1,0 +1,49 @@
+# Memory-optimized config for large model training
+# Model
+model_name_or_path: openai/gpt-oss-120b
+attn_implementation: kernels-community/vllm-flash-attn3
+torch_dtype: bfloat16
+
+# Dataset
+dataset_name: HuggingFaceH4/Multilingual-Thinking
+dataset_num_proc: 1
+
+# Memory-optimized hyperparameters
+learning_rate: 2.0e-4
+gradient_checkpointing: false
+gradient_checkpointing_kwargs:
+  use_reentrant: true
+num_train_epochs: 1.0
+max_train_steps: 2
+logging_steps: 1
+
+# Aggressive memory optimization: tiny batch size, high gradient accumulation
+per_device_train_batch_size: 1
+gradient_accumulation_steps: 1  # Effective batch size = 16 * num_gpus
+
+# Reduce sequence length significantly to save activation memory
+max_length: 2048
+
+# Packing strategy for efficient sequence handling
+packing: true
+packing_strategy: "wrapped"  # Can be "first_fit", "best_fit", or "wrapped"
+
+# LoRA settings
+use_peft: true
+lora_r: 8
+lora_alpha: 16
+lora_dropout: 0.0
+lora_target_modules: all-linear
+
+# Learning rate schedule
+warmup_ratio: 0.03
+lr_scheduler_type: cosine_with_min_lr
+lr_scheduler_kwargs:
+  min_lr_rate: 0.1
+
+# Output
+output_dir: gpt-oss-120b-multilingual-reasoner-memory-opt
+report_to:
+- none
+push_to_hub: false
+seed: 42

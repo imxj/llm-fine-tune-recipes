@@ -1,0 +1,13 @@
+torch
+pandas
+datasets
+transformers>=4.55.0
+trl>=0.21.0
+accelerate
+triton
+deepspeed
+codecarbon
+jupyterlab
+kernels>=0.9.0
+peft>=0.17.0
+trackio
